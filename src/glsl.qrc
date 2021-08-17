@@ -7,5 +7,7 @@
         <file>glsl/noOp.frag.glsl</file>
         <file>glsl/passthrough.vert.glsl</file>
         <file>glsl/sky.frag.glsl</file>
+        <file>glsl/slot.frag.glsl</file>
+        <file>glsl/slot.vert.glsl</file>
     </qresource>
 </RCC>

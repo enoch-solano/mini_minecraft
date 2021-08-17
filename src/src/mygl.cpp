@@ -10,7 +10,7 @@
 MyGL::MyGL(QWidget *parent)
     : OpenGLContext(parent),
       m_worldAxes(this),
-      m_progLambert(this), m_progFlat(this),
+      m_progLambert(this), m_progFlat(this), m_progSlot(this),
       m_terrain(this), m_player(this, glm::vec3(32.f, 164.f, 32.f), m_terrain),
       m_inputs(this->mapToGlobal(QPoint(width() / 2, height() / 2)).x(), this->mapToGlobal(QPoint(width() / 2, height() / 2)).y()),
       m_skyFrameBuffer(this, this->width(), this->height(), this->devicePixelRatio()),
@@ -36,8 +36,7 @@ void MyGL::moveMouseToCenter() {
     QCursor::setPos(this->mapToGlobal(QPoint(width() / 2, height() / 2)));
 }
 
-void MyGL::initializeGL()
-{
+void MyGL::initializeGL() {
     // Create an OpenGL context using Qt's QOpenGLFunctions_3_2_Core class
     // If you were programming in a non-Qt context you might use GLEW (GL Extension Wrangler)instead
     initializeOpenGLFunctions();
@@ -66,6 +65,8 @@ void MyGL::initializeGL()
     m_progLambert.create(":/glsl/lambert.vert.glsl", ":/glsl/lambert.frag.glsl");
     // Create and set up the flat lighting shader
     m_progFlat.create(":/glsl/flat.vert.glsl", ":/glsl/flat.frag.glsl");
+    // Create and set up the slot shader
+    m_progSlot.create(":/glsl/slot.vert.glsl", ":/glsl/slot.frag.glsl");
 
     m_terrain.initTexture();
 
@@ -78,6 +79,7 @@ void MyGL::initializeGL()
     glBindVertexArray(vao);
 
 //    m_terrain.CreateTestScene();
+    std::cout << "Generating terrain" << std::endl;
     m_terrain.generateTerrain(-64 * TERRAIN_CREATE_RADIUS, 64 * (TERRAIN_CREATE_RADIUS + 1),
                               -64 * TERRAIN_CREATE_RADIUS, 64 * (TERRAIN_CREATE_RADIUS + 1));
     std::cout << "Done initializing terrain" << std::endl;

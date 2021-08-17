@@ -3,5 +3,7 @@
         <file>textures/minecraft_normals_all.png</file>
         <file>textures/minecraft_textures_all.png</file>
         <file>textures/minecraft_textures_all_grey_grass.png</file>
+        <file>textures/slot.png</file>
+        <file>textures/slot_black.png</file>
     </qresource>
 </RCC>

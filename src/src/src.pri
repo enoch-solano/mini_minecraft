@@ -23,7 +23,8 @@ SOURCES += \
     $$PWD/scene/blockoutline.cpp \
     $$PWD/scene/chunkworkers.cpp \
     $$PWD/inventory_system/inventory.cpp \
-    $$PWD/inventory_system/craftingtable.cpp
+    $$PWD/inventory_system/craftingtable.cpp \
+    $$PWD/inventory_system/block.cpp
 
 HEADERS += \
     $$PWD/framebuffer.h \
@@ -51,4 +52,6 @@ HEADERS += \
     $$PWD/scene/chunkworkers.h \
     $$PWD/scene/chunkhelpers.h \
     $$PWD/inventory_system/inventory.h \
-    $$PWD/inventory_system/craftingtable.h
+    $$PWD/inventory_system/craftingtable.h \
+    $$PWD/inventory_system/block.h \
+    $$PWD/utils.h

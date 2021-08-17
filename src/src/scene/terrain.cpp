@@ -321,9 +321,11 @@ void Chunk::create() {
     }
 
     m_count = static_cast<int>(idxData.size());
+
     generateIdxOpq();
     mp_context->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufIdxOpq);
     mp_context->glBufferData(GL_ELEMENT_ARRAY_BUFFER, idxData.size() * sizeof(GLuint), idxData.data(), GL_STATIC_DRAW);
+
     generateOpq();
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, m_bufOpq);
     mp_context->glBufferData(GL_ARRAY_BUFFER, vboData.size() * sizeof(float), vboData.data(), GL_STATIC_DRAW);
@@ -332,15 +334,19 @@ void Chunk::create() {
 
 void Chunk::create(const std::vector<float> &vboDataOpaque, const vector<GLuint> &idxDataOpaque, const std::vector<float> &vboDataTransparent, const vector<GLuint> &idxDataTransparent) {
     m_count = static_cast<int>(idxDataOpaque.size());
+
     generateIdxOpq();
     mp_context->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufIdxOpq);
     mp_context->glBufferData(GL_ELEMENT_ARRAY_BUFFER, idxDataOpaque.size() * sizeof(GLuint), idxDataOpaque.data(), GL_STATIC_DRAW);
+
     generateIdxTra();
     mp_context->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufIdxTra);
     mp_context->glBufferData(GL_ELEMENT_ARRAY_BUFFER, idxDataTransparent.size() * sizeof(GLuint), idxDataTransparent.data(), GL_STATIC_DRAW);
+
     generateOpq();
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, m_bufOpq);
     mp_context->glBufferData(GL_ARRAY_BUFFER, vboDataOpaque.size() * sizeof(float), vboDataOpaque.data(), GL_STATIC_DRAW);
+
     generateTra();
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, m_bufTra);
     mp_context->glBufferData(GL_ARRAY_BUFFER, vboDataTransparent.size() * sizeof(float), vboDataTransparent.data(), GL_STATIC_DRAW);
