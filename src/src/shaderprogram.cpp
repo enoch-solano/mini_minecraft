@@ -64,20 +64,20 @@ void ShaderProgram::create(const char *vertfile, const char *fragfile)
     // See shaderprogram.h for more information about these variables
     attrPos = context->glGetAttribLocation(prog, "vs_Pos");
     attrNor = context->glGetAttribLocation(prog, "vs_Nor");
-    attrUV = context->glGetAttribLocation(prog, "vs_UV");
+    attrUV  = context->glGetAttribLocation(prog, "vs_UV");
     attrCosPow = context->glGetAttribLocation(prog, "vs_CosPow");
-    attrAnim = context->glGetAttribLocation(prog, "vs_Anim");
-    attrCol = context->glGetAttribLocation(prog, "vs_Col");
+    attrAnim   = context->glGetAttribLocation(prog, "vs_Anim");
+    attrCol    = context->glGetAttribLocation(prog, "vs_Col");
 
     unifModel      = context->glGetUniformLocation(prog, "u_Model");
     unifModelInvTr = context->glGetUniformLocation(prog, "u_ModelInvTr");
     unifViewProj   = context->glGetUniformLocation(prog, "u_ViewProj");
-    unifBlockTexture    = context->glGetUniformLocation(prog, "u_TerrainTexture");
-    unifSkyTexture    = context->glGetUniformLocation(prog, "u_SkyTexture");
-    unifScreenDimensions    = context->glGetUniformLocation(prog, "u_ScreenDimensions");
+    unifBlockTexture     = context->glGetUniformLocation(prog, "u_TerrainTexture");
+    unifSkyTexture       = context->glGetUniformLocation(prog, "u_SkyTexture");
+    unifScreenDimensions = context->glGetUniformLocation(prog, "u_ScreenDimensions");
     unifPlayerPos  = context->glGetUniformLocation(prog, "u_PlayerPos");
     unifTime       = context->glGetUniformLocation(prog, "u_Time");
-    unifCamAttribs       = context->glGetUniformLocation(prog, "u_CameraAttribs");
+    unifCamAttribs = context->glGetUniformLocation(prog, "u_CameraAttribs");
 }
 
 void ShaderProgram::useMe()

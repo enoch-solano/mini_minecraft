@@ -11,6 +11,8 @@ MyGL::MyGL(QWidget *parent)
     : OpenGLContext(parent),
       m_worldAxes(this),
       m_progLambert(this), m_progFlat(this), m_progSlot(this),
+      m_slotTexture(this), m_slotBlackTexture(this),
+      m_inventory_opened(false), m_inventory(this, -0.75, -0.75, 1.5, 0.75),
       m_terrain(this), m_player(this, glm::vec3(32.f, 164.f, 32.f), m_terrain),
       m_inputs(this->mapToGlobal(QPoint(width() / 2, height() / 2)).x(), this->mapToGlobal(QPoint(width() / 2, height() / 2)).y()),
       m_skyFrameBuffer(this, this->width(), this->height(), this->devicePixelRatio()),
@@ -70,6 +72,13 @@ void MyGL::initializeGL() {
 
     m_terrain.initTexture();
 
+    // initialize slot textures
+    m_slotTexture.create(":/textures/slot.png");
+    m_slotTexture.load(INVENTORY_SLOT_TEXTURE_SLOT);
+
+    m_slotBlackTexture.create(":/textures/slot_black.png");
+    m_slotBlackTexture.load(INVENTORY_SLOT_BLACK_TEXTURE_SLOT);
+
     m_skyFrameBuffer.create();
     m_geomQuad.create();
     m_progSky.create(":/glsl/passthrough.vert.glsl", ":/glsl/sky.frag.glsl");
@@ -78,7 +87,6 @@ void MyGL::initializeGL() {
     // using multiple VAOs, we can just bind one once.
     glBindVertexArray(vao);
 
-//    m_terrain.CreateTestScene();
     std::cout << "Generating terrain" << std::endl;
     m_terrain.generateTerrain(-64 * TERRAIN_CREATE_RADIUS, 64 * (TERRAIN_CREATE_RADIUS + 1),
                               -64 * TERRAIN_CREATE_RADIUS, 64 * (TERRAIN_CREATE_RADIUS + 1));
@@ -123,7 +131,7 @@ void MyGL::tick() {
     m_progLambert.setTime(summed_dTs);
     m_progSky.setTime(summed_dTs);
 
-    if (m_initialTerrainLoaded) {
+    if (m_initialTerrainLoaded && !m_inventory_opened) {
         // Have the player update their position and physics
         m_player.tick(dT, m_inputs);
         m_progLambert.setPlayerPos(m_player.mcr_position);
@@ -194,6 +202,22 @@ void MyGL::paintGL() {
     }
 
     m_progSky.drawScreenSpace(m_geomQuad);
+
+
+    //------------ INVENTORY STUFF ------------//
+    glDisable(GL_DEPTH_TEST);
+
+    // TODO: bind slot textures
+
+    m_progSlot.setModelMatrix(glm::mat4());
+    m_inventory.draw(&m_progSlot, nullptr, INVENTORY_SLOT_TEXTURE_SLOT);
+
+    if (m_inventory_opened) {
+        // TODO: draw the crafting table
+    }
+
+    glEnable(GL_DEPTH_TEST);
+    //-----------------------------------------//
 }
 
 // TODO: Change this so it renders the nine zones of generated
@@ -241,6 +265,29 @@ void MyGL::keyPressEvent(QKeyEvent *e) {
     } else if (e->key() == Qt::Key_Shift) {
         m_inputs.shiftPressed = true;
     }
+
+
+    if (e->key() == Qt::Key_I) {
+        m_inventory_opened = !m_inventory_opened;
+
+        m_inventory.toggle_active_mode();
+
+        updateInventory();
+
+        // if the inventory closed, return mouse to the center
+        if (!m_inventory_opened) {
+            setCursor(Qt::BlankCursor);
+            moveMouseToCenter();
+        } else {
+            setCursor(Qt::CrossCursor);
+        }
+    } else if (e->key() == Qt::Key_Left || e->key() == Qt::Key_Right) {
+        m_inventory.select_horizontal(e->key());
+        updateInventory();
+    } else if ((e->key() == Qt::Key_Up || e->key() == Qt::Key_Down) && m_inventory_opened) {
+//        m_inventory.select_vertical(e->key());
+        updateInventory();
+    }
 }
 
 void MyGL::keyReleaseEvent(QKeyEvent *e) {
@@ -268,22 +315,34 @@ void MyGL::mouseMoveEvent(QMouseEvent *e) {
     m_inputs.mouseYprev = this->height() / 2;
     m_inputs.mouseX = e->x();
     m_inputs.mouseY = e->y();
-    moveMouseToCenter();
+
+    if (!m_inventory_opened) {
+        moveMouseToCenter();
+    }
 }
 
 void MyGL::mousePressEvent(QMouseEvent *e) {
-    if (e->button() == Qt::RightButton) {
-        // Place block
-        glm::ivec3 toPlace;
-        if (m_player.placeBlockCheck(m_terrain, &toPlace)) {
-            m_terrain.changeBlockAt(toPlace, STONE);
+    if (m_inventory_opened) {
+        float x =  (e->x() - (this->width()  / 2.f)) * 2.f / this->width();
+        float y = -(e->y() - (this->height() / 2.f)) * 2.f / this->height();
+
+        // check if the player has clicked the inventory
+        if (m_inventory.is_within_bounds(x, y)) {
         }
-    }
-    else if (e->button() == Qt::LeftButton) {
-        // Remove block
-        glm::ivec3 toBreak;
-        if (m_player.breakBlockCheck(m_terrain, &toBreak)) {
-            m_terrain.changeBlockAt(toBreak, EMPTY);
+
+    } else {
+        if (e->button() == Qt::RightButton) {
+            // Place block
+            glm::ivec3 toPlace;
+            if (m_player.placeBlockCheck(m_terrain, &toPlace)) {
+                m_terrain.changeBlockAt(toPlace, STONE);
+            }
+        } else if (e->button() == Qt::LeftButton) {
+            // Remove block
+            glm::ivec3 toBreak;
+            if (m_player.breakBlockCheck(m_terrain, &toBreak)) {
+                m_terrain.changeBlockAt(toBreak, EMPTY);
+            }
         }
     }
 }

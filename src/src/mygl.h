@@ -27,6 +27,11 @@ private:
     ShaderProgram m_progFlat;// A shader program that uses "flat" reflection (no shadowing at all)
 
     ShaderProgram m_progSlot;
+    Texture m_slotTexture;
+    Texture m_slotBlackTexture;
+
+    bool m_inventory_opened;
+    Inventory m_inventory;
 
     GLuint vao; // A handle for our vertex array object. This will store the VBOs created in our geometry classes.
                 // Don't worry too much about this. Just know it is necessary in order to render geometry.
@@ -50,6 +55,11 @@ private:
                               // your mouse stays within the screen bounds and is always read.
 
     void sendPlayerDataToGUI() const;
+
+    void updateInventory() {
+        m_inventory.destroy();
+        m_inventory.create();
+    }
 
 
 public:

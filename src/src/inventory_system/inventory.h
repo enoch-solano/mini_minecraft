@@ -13,7 +13,7 @@
 
 
 class Inventory : public Drawable {
-    bool m_inventory_active;
+    bool m_inventory_open;
 
     std::vector<BlockType> m_slots;
     std::vector<Block*> m_blocks;
@@ -25,6 +25,11 @@ class Inventory : public Drawable {
 
     float slot_width  = 0.25 * 3.f / 4.f;
     float slot_height = 0.25;
+
+    std::vector<glm::ivec2> offsets = { glm::ivec2(0, 0),
+                                        glm::ivec2(1, 0),
+                                        glm::ivec2(1, 1),
+                                        glm::ivec2(0, 1) };
 
     int m_num_blocks;
     int m_num_col;
@@ -45,15 +50,20 @@ public:
 
     int get_index(float x, float y);
 
-    void select_right();
     void select_left();
+    void select_right();
+
+    void select_horizontal(int key) {
+        key == Qt::Key_Left ? select_left() : select_right();
+    }
+
     void select_up();
     void select_down();
 
     bool add_block(BlockType block);
 
     virtual ~Inventory() {}
-    virtual void create() override {}
+    virtual void create() override;
     virtual void toggle_active_mode() {}
     virtual void draw(ShaderProgram *prog, ShaderProgram *block_prog, int texture_slot) {}
 };

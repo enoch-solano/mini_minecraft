@@ -3,10 +3,19 @@
 #include <openglcontext.h>
 #include <glm_includes.h>
 
+// holds the vertex attributes in the correct order
+struct vertexAttribute {
+    glm::vec4 pos;  // position
+    glm::vec4 nor;  // normal
+    glm::vec2 uv;   // uv coords
+    float cosPos;   // cosine power
+    float animFlag; // animation flag
+};
+
+
 //This defines a class which can be rendered by our shader program.
 //Make any geometry a subclass of ShaderProgram::Drawable in order to render it with the ShaderProgram class.
-class Drawable
-{
+class Drawable {
 protected:
     int m_count;     // The number of indices stored in bufIdx.
     GLuint m_bufIdxOpq; // A Vertex Buffer Object that we will use to store triangle indices (GLuints)
