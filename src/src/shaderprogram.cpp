@@ -10,7 +10,7 @@ ShaderProgram::ShaderProgram(OpenGLContext *context)
     : vertShader(), fragShader(), prog(),
       attrPos(-1), attrNor(-1), attrUV(-1), attrCosPow(-1), attrAnim(-1),
       unifModel(-1), unifModelInvTr(-1), unifViewProj(-1), unifBlockTexture(-1),
-      unifSkyTexture(-1), unifScreenDimensions(-1),
+      unifSkyTexture(-1), unifScreenDimensions(-1), unifInventorySlotTexture(-1),
       unifPlayerPos(-1), unifCamAttribs(-1), unifTime(-1),
       context(context)
 {}
@@ -73,6 +73,7 @@ void ShaderProgram::create(const char *vertfile, const char *fragfile)
     unifModelInvTr = context->glGetUniformLocation(prog, "u_ModelInvTr");
     unifViewProj   = context->glGetUniformLocation(prog, "u_ViewProj");
     unifBlockTexture     = context->glGetUniformLocation(prog, "u_TerrainTexture");
+    unifInventorySlotTexture = context->glGetUniformLocation(prog, "u_InventorySlotTexture");
     unifSkyTexture       = context->glGetUniformLocation(prog, "u_SkyTexture");
     unifScreenDimensions = context->glGetUniformLocation(prog, "u_ScreenDimensions");
     unifPlayerPos  = context->glGetUniformLocation(prog, "u_PlayerPos");
@@ -144,6 +145,14 @@ void ShaderProgram::setTime(float t) {
     useMe();
     if (unifTime != -1) {
         context->glUniform1f(unifTime, t);
+    }
+}
+
+void ShaderProgram::setInventorySlotTextureSampler(int slot) {
+    useMe();
+
+    if (unifInventorySlotTexture != -1) {
+        context->glUniform1i(unifInventorySlotTexture, slot);
     }
 }
 

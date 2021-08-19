@@ -65,7 +65,7 @@ public:
     virtual ~Inventory() {}
     virtual void create() override;
     virtual void toggle_active_mode() {}
-    virtual void draw(ShaderProgram *prog, ShaderProgram *block_prog, int texture_slot) {}
+    virtual void draw(ShaderProgram *slot_prog, Texture &slotTexture, ShaderProgram *block_prog);
 };
 
 #endif // INVENTORY_H

@@ -27,8 +27,8 @@ private:
     ShaderProgram m_progFlat;// A shader program that uses "flat" reflection (no shadowing at all)
 
     ShaderProgram m_progSlot;
-    Texture m_slotTexture;
-    Texture m_slotBlackTexture;
+    Texture m_inventorySlotTexture;
+    Texture m_craftingSlotTexture;
 
     bool m_inventory_opened;
     Inventory m_inventory;

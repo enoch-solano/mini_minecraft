@@ -22,10 +22,6 @@ Inventory::Inventory(OpenGLContext *context, float x, float y, float width, floa
 void Inventory::create() {
     std::vector<vertexAttribute> vboData;
     std::vector<GLuint> idxData;
-    GLuint maxIdx = 0;
-
-
-
     float tol = 1e-4;
 
     // changes depending on if the inventory is open or not
@@ -34,6 +30,7 @@ void Inventory::create() {
 
     float width = m_x + m_width - tol;
 
+    // keeps track of the slot we are currently processing
     int slot = 0;
 
     for (float y = m_y; y < height; y += slot_height) {
@@ -74,6 +71,22 @@ void Inventory::create() {
     generateOpq();
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, m_bufOpq);
     mp_context->glBufferData(GL_ARRAY_BUFFER, vboData.size() * sizeof(vertexAttribute), vboData.data(), GL_STATIC_DRAW);
+}
+
+
+void Inventory::draw(ShaderProgram *slot_prog, Texture &slotTexture, ShaderProgram *block_prog)
+{
+    mp_context->glDisable((GL_DEPTH_TEST));
+
+    slot_prog->setModelMatrix(glm::mat4());
+
+    // bind the texture data to the appropriate slot
+    slotTexture.bind(INVENTORY_SLOT_TEXTURE_SLOT);
+    slot_prog->setInventorySlotTextureSampler(INVENTORY_SLOT_TEXTURE_SLOT);
+
+    // draw the inventory with the appropriate
+    slot_prog->draw(*this, true);
+    mp_context->glEnable((GL_DEPTH_TEST));
 }
 
 // returns true if coords (x,y) are within the bounds of the inventory

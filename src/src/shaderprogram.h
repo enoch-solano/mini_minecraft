@@ -27,6 +27,7 @@ public:
     int unifModelInvTr; // A handle for the "uniform" mat4 representing inverse transpose of the model matrix in the vertex shader
     int unifViewProj; // A handle for the "uniform" mat4 representing combined projection and view matrices in the vertex shader
     int unifBlockTexture; // A handle for the "uniform" vec4 representing color of geometry in the vertex shader
+    int unifInventorySlotTexture;
     int unifSkyTexture;
     int unifScreenDimensions;
     int unifPlayerPos;
@@ -49,6 +50,8 @@ public:
     void setPlayerPos(const glm::vec3 &pp);
     // Pass the current time counter to the GPU
     void setTime(float t);
+    // Pass the inventory slot texture
+    void setInventorySlotTextureSampler(int slot);
     // Pass the given color to this shader on the GPU
     void setBlockTextureSampler(int slot);
     // Set out sky texture sampler to the correct slot

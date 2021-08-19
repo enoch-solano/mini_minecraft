@@ -11,7 +11,7 @@ MyGL::MyGL(QWidget *parent)
     : OpenGLContext(parent),
       m_worldAxes(this),
       m_progLambert(this), m_progFlat(this), m_progSlot(this),
-      m_slotTexture(this), m_slotBlackTexture(this),
+      m_inventorySlotTexture(this), m_craftingSlotTexture(this),
       m_inventory_opened(false), m_inventory(this, -0.75, -0.75, 1.5, 0.75),
       m_terrain(this), m_player(this, glm::vec3(32.f, 164.f, 32.f), m_terrain),
       m_inputs(this->mapToGlobal(QPoint(width() / 2, height() / 2)).x(), this->mapToGlobal(QPoint(width() / 2, height() / 2)).y()),
@@ -73,11 +73,11 @@ void MyGL::initializeGL() {
     m_terrain.initTexture();
 
     // initialize slot textures
-    m_slotTexture.create(":/textures/slot.png");
-    m_slotTexture.load(INVENTORY_SLOT_TEXTURE_SLOT);
+    m_inventorySlotTexture.create(":/textures/slot.png");
+    m_inventorySlotTexture.load(INVENTORY_SLOT_TEXTURE_SLOT);
 
-    m_slotBlackTexture.create(":/textures/slot_black.png");
-    m_slotBlackTexture.load(INVENTORY_SLOT_BLACK_TEXTURE_SLOT);
+    m_craftingSlotTexture.create(":/textures/slot_black.png");
+    m_craftingSlotTexture.load(INVENTORY_SLOT_BLACK_TEXTURE_SLOT);
 
     m_skyFrameBuffer.create();
     m_geomQuad.create();
@@ -206,11 +206,9 @@ void MyGL::paintGL() {
 
     //------------ INVENTORY STUFF ------------//
     glDisable(GL_DEPTH_TEST);
-
-    // TODO: bind slot textures
-
-    m_progSlot.setModelMatrix(glm::mat4());
-    m_inventory.draw(&m_progSlot, nullptr, INVENTORY_SLOT_TEXTURE_SLOT);
+    m_inventory.destroy();
+    m_inventory.create();
+    m_inventory.draw(&m_progSlot, m_inventorySlotTexture, nullptr);
 
     if (m_inventory_opened) {
         // TODO: draw the crafting table
