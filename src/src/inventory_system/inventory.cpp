@@ -94,8 +94,45 @@ bool Inventory::is_within_bounds(float x, float y) {
     return x >= m_x && y >= m_y && x <= m_x+m_width && y <= m_y+m_height;
 }
 
-void Inventory::select_left() {}
-void Inventory::select_right() {}
+int Inventory::get_index(float x, float y) {
+    int row = int(std::floor((y - m_y) / slot_height));
+    int col = int(std::floor((x - m_x) / slot_width));
+
+    return col + row*m_num_col;
+}
+
+void Inventory::select_block(float x, float y) {
+    m_selected = get_index(x, y);
+}
+
+void Inventory::select_left() {
+    m_selected--;
+    m_selected = m_inventory_open ? (m_selected + m_num_blocks) % m_num_blocks : (m_selected + m_num_col) % m_num_col;
+}
+
+void Inventory::select_right() {
+    m_selected++;
+    m_selected = m_inventory_open ? m_selected % m_num_blocks : m_selected % m_num_col;
+}
+
+void Inventory::select_horizontal(int key) {
+    key == Qt::Key_Left ? select_left() : select_right();
+}
+
+void Inventory::select_down() {
+    m_selected -= m_num_col;
+    m_selected += m_num_blocks;
+    m_selected %= m_num_blocks;
+}
+
+void Inventory::select_up() {
+    m_selected += m_num_col;
+    m_selected %= m_num_blocks;
+}
+
+void Inventory::select_vertical(int key) {
+    key == Qt::Key_Down ? select_down() : select_up();
+}
 
 
 

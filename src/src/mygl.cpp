@@ -79,6 +79,9 @@ void MyGL::initializeGL() {
     m_craftingSlotTexture.create(":/textures/slot_black.png");
     m_craftingSlotTexture.load(INVENTORY_SLOT_BLACK_TEXTURE_SLOT);
 
+    // initialize VBO data for the inventory
+    m_inventory.create();
+
     m_skyFrameBuffer.create();
     m_geomQuad.create();
     m_progSky.create(":/glsl/passthrough.vert.glsl", ":/glsl/sky.frag.glsl");
@@ -206,8 +209,6 @@ void MyGL::paintGL() {
 
     //------------ INVENTORY STUFF ------------//
     glDisable(GL_DEPTH_TEST);
-    m_inventory.destroy();
-    m_inventory.create();
     m_inventory.draw(&m_progSlot, m_inventorySlotTexture, nullptr);
 
     if (m_inventory_opened) {
@@ -268,8 +269,7 @@ void MyGL::keyPressEvent(QKeyEvent *e) {
     if (e->key() == Qt::Key_I) {
         m_inventory_opened = !m_inventory_opened;
 
-        m_inventory.toggle_active_mode();
-
+        m_inventory.toggle_mode(m_inventory_opened);
         updateInventory();
 
         // if the inventory closed, return mouse to the center
@@ -283,7 +283,7 @@ void MyGL::keyPressEvent(QKeyEvent *e) {
         m_inventory.select_horizontal(e->key());
         updateInventory();
     } else if ((e->key() == Qt::Key_Up || e->key() == Qt::Key_Down) && m_inventory_opened) {
-//        m_inventory.select_vertical(e->key());
+        m_inventory.select_vertical(e->key());
         updateInventory();
     }
 }
@@ -326,6 +326,8 @@ void MyGL::mousePressEvent(QMouseEvent *e) {
 
         // check if the player has clicked the inventory
         if (m_inventory.is_within_bounds(x, y)) {
+            m_inventory.select_block(x, y);
+            updateInventory();
         }
 
     } else {

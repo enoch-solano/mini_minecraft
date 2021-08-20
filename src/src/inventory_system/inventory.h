@@ -37,34 +37,33 @@ class Inventory : public Drawable {
 public:
     Inventory(OpenGLContext *context, float x, float y, float width, float height);
 
-    // returns true if coords (x,y) are within the bounds of the inventory
-    bool is_within_bounds(float x, float y);
-
     // helper functions for interacting with inventory system
     BlockType pick_up_block(float x, float y);
     BlockType drop_block(float x, float y, BlockType block);
     void reset_picked_up();
 
-    void select_block(float x, float y);
     BlockType remove_selected_block();
 
-    int get_index(float x, float y);
-
+    // used to change the selected slot with key presses
     void select_left();
     void select_right();
-
-    void select_horizontal(int key) {
-        key == Qt::Key_Left ? select_left() : select_right();
-    }
-
-    void select_up();
     void select_down();
+    void select_up();
+
+    void select_horizontal(int key);
+    void select_vertical(int key);
+
+    // returns true if coords (x,y) are within the bounds of the inventory
+    bool is_within_bounds(float x, float y);
+
+    int get_index(float x, float y);
+    void select_block(float x, float y);
 
     bool add_block(BlockType block);
 
     virtual ~Inventory() {}
     virtual void create() override;
-    virtual void toggle_active_mode() {}
+    virtual void toggle_mode(bool open) { m_inventory_open = open; }
     virtual void draw(ShaderProgram *slot_prog, Texture &slotTexture, ShaderProgram *block_prog);
 };
 
