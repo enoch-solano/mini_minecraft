@@ -329,7 +329,6 @@ void MyGL::mousePressEvent(QMouseEvent *e) {
             m_inventory.select_block(x, y);
             updateInventory();
         }
-
     } else {
         if (e->button() == Qt::RightButton) {
             // Place block

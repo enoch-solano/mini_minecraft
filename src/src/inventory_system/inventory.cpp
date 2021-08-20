@@ -134,6 +134,13 @@ void Inventory::select_vertical(int key) {
     key == Qt::Key_Down ? select_down() : select_up();
 }
 
+void Inventory::toggle_mode(bool open) {
+    m_inventory_open = open;
+
+    if (!m_inventory_open) {
+        m_selected = 0;
+    }
+}
 
 
 

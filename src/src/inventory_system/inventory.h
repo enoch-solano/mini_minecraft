@@ -44,6 +44,8 @@ public:
 
     BlockType remove_selected_block();
 
+    bool add_block(BlockType block);
+
     // used to change the selected slot with key presses
     void select_left();
     void select_right();
@@ -59,12 +61,12 @@ public:
     int get_index(float x, float y);
     void select_block(float x, float y);
 
-    bool add_block(BlockType block);
+    virtual void toggle_mode(bool open);
+
+    virtual void create() override;
+    virtual void draw(ShaderProgram *slot_prog, Texture &slotTexture, ShaderProgram *block_prog);
 
     virtual ~Inventory() {}
-    virtual void create() override;
-    virtual void toggle_mode(bool open) { m_inventory_open = open; }
-    virtual void draw(ShaderProgram *slot_prog, Texture &slotTexture, ShaderProgram *block_prog);
 };
 
 #endif // INVENTORY_H
