@@ -236,7 +236,6 @@ void MyGL::renderTerrain() {
                    false);
 }
 
-
 void MyGL::keyPressEvent(QKeyEvent *e) {
     float amount = 1.0f;
     if (e->modifiers() & Qt::ShiftModifier){

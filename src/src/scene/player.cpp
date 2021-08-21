@@ -6,7 +6,7 @@
 #define MOVE_ACCEL 20.f
 #define JUMP_VELOCITY 17.f
 #define MOUSE_ROTATION_RADIANS glm::radians(3.f)
-#define PLAYER_ARM_LENGTH 3.f
+#define PLAYER_ARM_LENGTH 4.f
 
 Player::Player(OpenGLContext *context, glm::vec3 pos, const Terrain &terrain)
     : Entity(pos), m_posPrev(pos), m_velocity(0,0,0), m_acceleration(0,0,0),
@@ -109,7 +109,7 @@ const static vector<glm::vec3> corners {
 
 void Player::computePhysics(float dT, const Terrain &terrain) {
     // 1. Decay velocity
-    m_velocity *= 0.95f;
+    m_velocity *= 0.85f;
     // 2. Update velocity based on acceleration
     m_velocity += m_acceleration * dT;
     // 3. Update position based on velocity, while also
