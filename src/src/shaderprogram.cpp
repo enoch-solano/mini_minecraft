@@ -196,7 +196,7 @@ void ShaderProgram::setCamAttribs(const Camera &cam) {
 }
 
 //This function, as its name implies, uses the passed in GL widget
-void ShaderProgram::draw(Drawable &d, bool opaque) {
+void ShaderProgram::draw(Drawable &d, bool opaque, bool testing) {
     useMe();
 
     if (d.elemCount() < 0) {
@@ -207,6 +207,7 @@ void ShaderProgram::draw(Drawable &d, bool opaque) {
     if (!opaque) {
         bindAppropriateVBO = &Drawable::bindTra;
     }
+
 
     if ((d.*bindAppropriateVBO)()) {
         if (attrPos != -1) {

@@ -60,7 +60,7 @@ public:
     void setCamAttribs(const Camera &cam);
 
     // Interleaved VBO is used to draw all opaque data
-    void draw(Drawable &d, bool opaque);
+    void draw(Drawable &d, bool opaque, bool testing = false);
 
     // Interleaved VBO is used to draw onto a screen-space
     // object. Only needs position and UV data.

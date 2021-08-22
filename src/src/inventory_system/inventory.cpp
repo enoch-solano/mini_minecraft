@@ -1,4 +1,5 @@
 #include "inventory.h"
+#include <iostream>
 
 Inventory::Inventory(OpenGLContext *context, float x, float y, float width, float height)
     : Drawable(context), m_x(x), m_y(y), m_width(width), m_height(height), m_selected(0),
@@ -7,13 +8,11 @@ Inventory::Inventory(OpenGLContext *context, float x, float y, float width, floa
 {
 
     // initial set of blocks in inventory
-    std::array<BlockType, 10> blocks = { EMPTY, GRASS, DIRT, STONE, WATER, LAVA };
+//    std::array<BlockType, 10> blocks = { EMPTY, GRASS, DIRT, STONE, WATER, LAVA };
 
     // fills up the inventory
-    for (int i = 0; i < blocks.size(); i++) {
-        m_slots.push_back(blocks[i]);
-//      m_blocks.push_back(new Block(context, blocks[i]));
-
+    for (int i = 0; i < INVENTORY_NUM_SLOTS; i++) {
+        m_blocks[i] = new Block(context, GRASS);
     }
 }
 
@@ -60,6 +59,11 @@ void Inventory::create() {
         }
     }
 
+    for (int i = 0; i < m_num_blocks; i++) {
+        m_blocks[i]->destroy();
+        m_blocks[i]->create();
+    }
+
     m_count = static_cast<int>(idxData.size());
 
     // send index data to the GPU
@@ -74,7 +78,7 @@ void Inventory::create() {
 }
 
 
-void Inventory::draw(ShaderProgram *slot_prog, Texture &slotTexture, ShaderProgram *block_prog)
+void Inventory::draw(ShaderProgram *slot_prog, Texture &slotTexture, ShaderProgram *block_prog, Texture &blockTexture)
 {
     mp_context->glDisable((GL_DEPTH_TEST));
 
@@ -84,8 +88,37 @@ void Inventory::draw(ShaderProgram *slot_prog, Texture &slotTexture, ShaderProgr
     slotTexture.bind(INVENTORY_SLOT_TEXTURE_SLOT);
     slot_prog->setInventorySlotTextureSampler(INVENTORY_SLOT_TEXTURE_SLOT);
 
-    // draw the inventory with the appropriate
+    // draw the inventory
     slot_prog->draw(*this, true);
+
+    mp_context->glEnable((GL_DEPTH_TEST));
+    mp_context->glDisable((GL_DEPTH_TEST));
+
+
+    // bind the texture data to the appropriate slot
+    blockTexture.bind(MINECRAFT_BLOCK_TEXTURE_SLOT);
+    block_prog->setBlockTextureSampler(MINECRAFT_BLOCK_TEXTURE_SLOT);
+
+    // variables for drawing the blocks in the slots
+    float x0 = m_x + slot_width/2.f;
+    float y0 = m_y + slot_height/2.f;
+
+    int num_col = int(m_width / slot_width);
+    int num_blocks = m_inventory_open ? m_num_blocks : num_col;
+
+    // draw the blocks in the slots
+    for (int i = 0; i < num_blocks; i++) {
+        if (m_blocks[i]->get_type() == EMPTY) {
+            continue;
+        }
+
+        float x = x0 + slot_width  * (i % num_col);
+        float y = y0 + slot_height * (i / num_col);
+
+        block_prog->setModelMatrix(glm::translate(glm::mat4(), glm::vec3(x, y, 0)));
+        block_prog->draw(*(m_blocks[i]), true);
+    }
+
     mp_context->glEnable((GL_DEPTH_TEST));
 }
 

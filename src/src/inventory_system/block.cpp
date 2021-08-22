@@ -33,6 +33,10 @@ void Block::create() {
 void Block::addFace(std::vector<vertexAttribute> &vboData,
                     std::vector<GLuint> &idxData, FaceDirection dir)
 {
+    if (m_type == EMPTY) {
+        return;
+    }
+
     // adds the appropriate vertex indices for new vertices
     GLuint prev_num_verts = vboData.size();
     for (GLuint i = 0; i < 2; i++) {
@@ -54,32 +58,32 @@ void Block::addFace(std::vector<vertexAttribute> &vboData,
 
     switch(m_type) {
     case GRASS:
-        offset = dir == TOP ? glm::vec2(8, 2) : (dir == BOTTOM ? glm::vec2(2, 0) : glm::vec2(3, 0));
+        offset = dir == TOP ? glm::vec2(8, 13) : (dir == BOTTOM ? glm::vec2(2, 15) : glm::vec2(3, 15));
         face_cos_pow = 2.f;
         break;
     case DIRT:
-        offset = glm::vec2(2, 0);
+        offset = glm::vec2(2, 15);
         face_cos_pow = 2.f;
         break;
     case STONE:
-        offset = glm::vec2(1, 0);
+        offset = glm::vec2(1, 15);
         face_cos_pow = 50.f;
         break;
     case SNOW:
-        offset = glm::vec2(2, 4);
+        offset = glm::vec2(2, 11);
         face_cos_pow = 10.f;
         break;
     default:
-        offset = dir == TOP ? glm::vec2(8, 2) : (dir == BOTTOM ? glm::vec2(2, 0) : glm::vec2(3, 0));
+        offset = dir == TOP ? glm::vec2(8, 13) : (dir == BOTTOM ? glm::vec2(2, 15) : glm::vec2(3, 15));
         face_cos_pow = 2.f;
         break;
     }
 
     // adds the appropriate uv coordinates for this face
-    faceVBOData[0].uv = (glm::vec2(0.f, 0.f) + offset) / 16.f;
-    faceVBOData[1].uv = (glm::vec2(1.f, 0.f) + offset) / 16.f;
-    faceVBOData[2].uv = (glm::vec2(1.f, 1.f) + offset) / 16.f;
-    faceVBOData[3].uv = (glm::vec2(0.f, 1.f) + offset) / 16.f;
+    faceVBOData[0].uv = (glm::vec2(1.f, 1.f) + offset) / 16.f;
+    faceVBOData[1].uv = (glm::vec2(0.f, 1.f) + offset) / 16.f;
+    faceVBOData[2].uv = (glm::vec2(0.f, 0.f) + offset) / 16.f;
+    faceVBOData[3].uv = (glm::vec2(1.f, 0.f) + offset) / 16.f;
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////// DETERMINES ATTRIBUTES BASED on DIR. of BLOCK //////////////////////////

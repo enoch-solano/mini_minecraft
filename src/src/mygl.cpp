@@ -10,8 +10,8 @@
 MyGL::MyGL(QWidget *parent)
     : OpenGLContext(parent),
       m_worldAxes(this),
-      m_progLambert(this), m_progFlat(this), m_progSlot(this),
-      m_inventorySlotTexture(this), m_craftingSlotTexture(this),
+      m_progLambert(this), m_progFlat(this), m_progSlot(this), m_progBlock(this),
+      m_inventorySlotTexture(this), m_craftingSlotTexture(this), m_blockTexture(this),
       m_inventory_opened(false), m_inventory(this, -0.75, -0.75, 1.5, 0.75),
       m_terrain(this), m_player(this, glm::vec3(32.f, 164.f, 32.f), m_terrain),
       m_inputs(this->mapToGlobal(QPoint(width() / 2, height() / 2)).x(), this->mapToGlobal(QPoint(width() / 2, height() / 2)).y()),
@@ -69,6 +69,8 @@ void MyGL::initializeGL() {
     m_progFlat.create(":/glsl/flat.vert.glsl", ":/glsl/flat.frag.glsl");
     // Create and set up the slot shader
     m_progSlot.create(":/glsl/slot.vert.glsl", ":/glsl/slot.frag.glsl");
+    // Create and set up the block shader
+    m_progBlock.create(":/glsl/block.vert.glsl", ":/glsl/block.frag.glsl");
 
     m_terrain.initTexture();
 
@@ -78,6 +80,9 @@ void MyGL::initializeGL() {
 
     m_craftingSlotTexture.create(":/textures/slot_black.png");
     m_craftingSlotTexture.load(INVENTORY_SLOT_BLACK_TEXTURE_SLOT);
+
+    m_blockTexture.create(":/textures/minecraft_textures_all.png");
+    m_blockTexture.load(MINECRAFT_BLOCK_TEXTURE_SLOT);
 
     // initialize VBO data for the inventory
     m_inventory.create();
@@ -209,7 +214,7 @@ void MyGL::paintGL() {
 
     //------------ INVENTORY STUFF ------------//
     glDisable(GL_DEPTH_TEST);
-    m_inventory.draw(&m_progSlot, m_inventorySlotTexture, nullptr);
+    m_inventory.draw(&m_progSlot, m_inventorySlotTexture, &m_progBlock, m_blockTexture);
 
     if (m_inventory_opened) {
         // TODO: draw the crafting table

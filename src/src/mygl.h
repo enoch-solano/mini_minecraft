@@ -30,6 +30,9 @@ private:
     Texture m_inventorySlotTexture;
     Texture m_craftingSlotTexture;
 
+    ShaderProgram m_progBlock;
+    Texture m_blockTexture;
+
     bool m_inventory_opened;
     Inventory m_inventory;
 

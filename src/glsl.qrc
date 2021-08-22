@@ -9,5 +9,7 @@
         <file>glsl/sky.frag.glsl</file>
         <file>glsl/slot.frag.glsl</file>
         <file>glsl/slot.vert.glsl</file>
+        <file>glsl/block.frag.glsl</file>
+        <file>glsl/block.vert.glsl</file>
     </qresource>
 </RCC>

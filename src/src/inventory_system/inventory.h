@@ -11,12 +11,13 @@
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
 
+#define INVENTORY_NUM_SLOTS 24
+
 
 class Inventory : public Drawable {
     bool m_inventory_open;
 
-    std::vector<BlockType> m_slots;
-    std::vector<Block*> m_blocks;
+    std::array<Block*, INVENTORY_NUM_SLOTS> m_blocks;
 
     int m_selected;     // index of selected block
     int m_picked_up;
@@ -26,10 +27,10 @@ class Inventory : public Drawable {
     float slot_width  = 0.25 * 3.f / 4.f;
     float slot_height = 0.25;
 
-    std::vector<glm::ivec2> offsets = { glm::ivec2(0, 0),
-                                        glm::ivec2(1, 0),
-                                        glm::ivec2(1, 1),
-                                        glm::ivec2(0, 1) };
+    std::vector<glm::ivec2> offsets = { glm::ivec2(1, 1),
+                                        glm::ivec2(0, 1),
+                                        glm::ivec2(0, 0),
+                                        glm::ivec2(1, 0) };
 
     int m_num_blocks;
     int m_num_col;
@@ -64,7 +65,7 @@ public:
     virtual void toggle_mode(bool open);
 
     virtual void create() override;
-    virtual void draw(ShaderProgram *slot_prog, Texture &slotTexture, ShaderProgram *block_prog);
+    virtual void draw(ShaderProgram *slot_prog, Texture &slotTexture, ShaderProgram *block_prog, Texture &blockTexture);
 
     virtual ~Inventory() {}
 };
