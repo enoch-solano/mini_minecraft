@@ -1,6 +1,8 @@
 #include "inventory.h"
 #include <iostream>
 
+#define NUM_BLOCKS 7
+
 Inventory::Inventory(OpenGLContext *context, float x, float y, float width, float height)
     : Drawable(context), m_x(x), m_y(y), m_width(width), m_height(height), m_selected(0),
       m_num_blocks(int(m_width / slot_width) * int(m_height / slot_height)), m_num_col(int(m_width / slot_width)),
@@ -8,11 +10,13 @@ Inventory::Inventory(OpenGLContext *context, float x, float y, float width, floa
 {
 
     // initial set of blocks in inventory
-//    std::array<BlockType, 10> blocks = { EMPTY, GRASS, DIRT, STONE, WATER, LAVA };
+    std::array<BlockType, NUM_BLOCKS> blocks = { GRASS, DIRT, STONE, SAND, SPONGE, RED_CLAY, SNOW };
 
     // fills up the inventory
     for (int i = 0; i < INVENTORY_NUM_SLOTS; i++) {
-        m_blocks[i] = new Block(context, GRASS);
+
+        BlockType block = i < NUM_BLOCKS ? blocks[i] : EMPTY;
+        m_blocks[i] = new Block(context, block);
     }
 }
 

@@ -12,7 +12,8 @@ MyGL::MyGL(QWidget *parent)
       m_worldAxes(this),
       m_progLambert(this), m_progFlat(this), m_progSlot(this), m_progBlock(this),
       m_inventorySlotTexture(this), m_craftingSlotTexture(this), m_blockTexture(this),
-      m_inventory_opened(false), m_inventory(this, -0.75, -0.75, 1.5, 0.75),
+      m_inventory_opened(false), m_inventory_closed(false),
+      m_inventory(this, -0.75, -0.75, 1.5, 0.75),
       m_terrain(this), m_player(this, glm::vec3(32.f, 164.f, 32.f), m_terrain),
       m_inputs(this->mapToGlobal(QPoint(width() / 2, height() / 2)).x(), this->mapToGlobal(QPoint(width() / 2, height() / 2)).y()),
       m_skyFrameBuffer(this, this->width(), this->height(), this->devicePixelRatio()),
@@ -139,7 +140,7 @@ void MyGL::tick() {
     m_progLambert.setTime(summed_dTs);
     m_progSky.setTime(summed_dTs);
 
-    if (m_initialTerrainLoaded && !m_inventory_opened) {
+    if (m_initialTerrainLoaded && !m_inventory_opened && !m_inventory_closed) {
         // Have the player update their position and physics
         m_player.tick(dT, m_inputs);
         m_progLambert.setPlayerPos(m_player.mcr_position);
@@ -279,6 +280,7 @@ void MyGL::keyPressEvent(QKeyEvent *e) {
         // if the inventory closed, return mouse to the center
         if (!m_inventory_opened) {
             setCursor(Qt::BlankCursor);
+            m_inventory_closed = true;
             moveMouseToCenter();
         } else {
             setCursor(Qt::CrossCursor);
@@ -317,6 +319,10 @@ void MyGL::mouseMoveEvent(QMouseEvent *e) {
     m_inputs.mouseYprev = this->height() / 2;
     m_inputs.mouseX = e->x();
     m_inputs.mouseY = e->y();
+
+    if (m_inventory_closed) {
+        m_inventory_closed = false;
+    }
 
     if (!m_inventory_opened) {
         moveMouseToCenter();

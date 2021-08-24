@@ -59,19 +59,24 @@ void Block::addFace(std::vector<vertexAttribute> &vboData,
     switch(m_type) {
     case GRASS:
         offset = dir == TOP ? glm::vec2(8, 13) : (dir == BOTTOM ? glm::vec2(2, 15) : glm::vec2(3, 15));
-        face_cos_pow = 2.f;
         break;
     case DIRT:
         offset = glm::vec2(2, 15);
-        face_cos_pow = 2.f;
         break;
     case STONE:
         offset = glm::vec2(1, 15);
-        face_cos_pow = 50.f;
         break;
     case SNOW:
         offset = glm::vec2(2, 11);
-        face_cos_pow = 10.f;
+        break;
+    case SAND:
+        offset = glm::vec2(2, 14);
+        break;
+    case SPONGE:
+        offset = glm::vec2(0, 12);
+        break;
+    case RED_CLAY:
+        offset = glm::vec2(8, 5);
         break;
     default:
         offset = dir == TOP ? glm::vec2(8, 13) : (dir == BOTTOM ? glm::vec2(2, 15) : glm::vec2(3, 15));

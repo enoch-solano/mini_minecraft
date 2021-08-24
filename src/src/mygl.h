@@ -34,6 +34,7 @@ private:
     Texture m_blockTexture;
 
     bool m_inventory_opened;
+    bool m_inventory_closed;
     Inventory m_inventory;
 
     GLuint vao; // A handle for our vertex array object. This will store the VBOs created in our geometry classes.
